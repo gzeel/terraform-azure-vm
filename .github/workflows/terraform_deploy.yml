@@ -38,10 +38,11 @@ jobs:
       - name: Terraform Init
         run: terraform init -backend=false
 
+      - name: Terraform Format
+        run: terraform fmt -check
+
       - name: Terraform Plan
         run: terraform plan -input=false
-        env:
-          ARM_SKIP_PROVIDER_REGISTRATION: true
         continue-on-error: true
 
       - name: Comment on PR with Plan Output

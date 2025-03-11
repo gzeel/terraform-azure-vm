@@ -8,11 +8,14 @@ terraform {
 }
 
 provider "azurerm" {
-  resource_provider_registrations = "none"
-  subscription_id = "c064671c-8f74-4fec-b088-b53c568245eb"
   features {}
+  subscription_id = "c064671c-8f74-4fec-b088-b53c568245eb"
+  resource_provider_registrations {
+    enabled = false
+  }
 }
 
+# Use existing resource group
 data "azurerm_resource_group" "rg" {
   name = "fe2157786"
 }
@@ -25,6 +28,7 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = data.azurerm_resource_group.rg.name
 }
 
+# Create subnet
 resource "azurerm_subnet" "subnet" {
   name                 = "internal"
   resource_group_name  = data.azurerm_resource_group.rg.name
@@ -79,11 +83,6 @@ resource "azurerm_network_interface_security_group_association" "nsg_association
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
-# Read SSH public key
-data "local_file" "ssh_public_key" {
-  filename = pathexpand("~/.ssh/azure_macbookpro.pub")
-}
-
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "vm" {
   name                = "azure-vm"
@@ -97,7 +96,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = data.local_file.ssh_public_key.content
+    public_key = file(pathexpand("~/.ssh/azure_macbookpro.pub"))
   }
 
   os_disk {
@@ -117,4 +116,3 @@ resource "azurerm_linux_virtual_machine" "vm" {
 output "public_ip_address" {
   value = azurerm_public_ip.publicip.ip_address
 }
-
