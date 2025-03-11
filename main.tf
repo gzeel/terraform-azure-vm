@@ -12,7 +12,6 @@ provider "azurerm" {
   subscription_id = "c064671c-8f74-4fec-b088-b53c568245eb"
 }
 
-# Use existing resource group
 data "azurerm_resource_group" "rg" {
   name = "fe2157786"
 }
