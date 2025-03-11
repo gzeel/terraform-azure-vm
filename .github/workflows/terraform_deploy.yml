@@ -42,8 +42,6 @@ jobs:
         run: terraform plan -input=false
         env:
           ARM_SKIP_PROVIDER_REGISTRATION: true
-          # Use environment variable authentication to avoid login
-          TF_CLI_ARGS: "-var 'skip_provider_registration=true'"
         continue-on-error: true
 
       - name: Comment on PR with Plan Output
