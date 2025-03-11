@@ -25,7 +25,6 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = data.azurerm_resource_group.rg.name
 }
 
-# Create subnet
 resource "azurerm_subnet" "subnet" {
   name                 = "internal"
   resource_group_name  = data.azurerm_resource_group.rg.name

@@ -32,10 +32,14 @@ jobs:
           echo "${{ secrets.SSH_PUBLIC_KEY_CONTENT }}" > ~/.ssh/azure_macbookpro.pub
           chmod 600 ~/.ssh/azure_macbookpro.pub
 
-      - name: Configure Azure credentials
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+      - name: Azure Login with Personal Token
+        run: |
+          echo "${{ secrets.AZURE_PERSONAL_TOKEN }}" | az login --identity-token
+          az account set --subscription "c064671c-8f74-4fec-b088-b53c568245eb"
 
       - name: Terraform Init
         run: terraform init
